@@ -1,0 +1,21 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    OptionParser (0.5.1)
+    concurrent-ruby (1.0.5)
+    ffi (1.9.25)
+    iostreams (0.14.0)
+      concurrent-ruby
+    rb-inotify (0.9.10)
+      ffi (>= 0.5.0, < 2)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  OptionParser
+  iostreams
+  rb-inotify
+
+BUNDLED WITH
+   1.16.4

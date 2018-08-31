@@ -1,0 +1,7 @@
+---
+watchers:
+  - src: "/home/mql/dev/inotiPGP/src"
+    dest: "/home/mql/dev/inotiPGP/dest"
+    type: "PGP"
+    id: "ThisIsThePrivateKeyID"
+    passphrase: "TheGreatStrongPassword"
