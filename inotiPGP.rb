@@ -3,6 +3,7 @@
 require 'optparse'
 require 'rb-inotify'
 require  'yaml'
+require 'logger'
 
 require_relative 'lib/pgp'
 
@@ -24,31 +25,37 @@ OptionParser.new do |opts|
   end
 end.parse!
 
+logger = Logger.new STDOUT
+logger.level = verbose ? Logger::DEBUG : Logger::INFO
+
+InotiPGP.logger=(logger)
+
 def load_config(c)
+    InotiPGP.logger.debug "Load config from #{c}"
     YAML.load_file(c)
 end
 
 c = load_config(config)
 if c.nil? || c['watchers'].nil?
-    puts "Nothing to do"
+    InotiPGP.logger.error "Nothing to do"
     exit
 end
 
 notifier = INotify::Notifier.new
 
 c['watchers'].each do |watcher|
-    puts "Watcher positioned on #{watcher['src']}"
+    InotiPGP.logger.info "Watcher positioned on #{watcher['src']}"
     notifier.watch(watcher['src'], :moved_to, :create) do |event|
-        puts "#{event.name} is now in #{watcher['src']}!"
+        InotiPGP.logger.info "#{event.name} is now in #{watcher['src']}"
 
-        p = Pgp.new(
+        p = InotiPGP::Pgp.new(
             File.join(watcher['src'], event.name),
             File.join(watcher['dest'], event.name + ".pgp"),
             watcher['id'],
             watcher['passphrase']
             )
 
-        BaseRunner.execute(p)
+        InotiPGP::BaseRunner.execute(p)
     end
 end
 
